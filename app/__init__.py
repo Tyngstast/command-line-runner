@@ -11,11 +11,12 @@ from app import models
 from config import DB_FILE
 
 if not os.path.isfile(DB_FILE):
-    print("No database file, initializing...")
+    print('No database file, initializing...')
     db.create_all()
 
 from flask_restful import Api
-from app.resources import Commands
+from app.rest.commands import CommandResource, CommandListResource
 
 api = Api(app)
-api.add_resource(Commands, '/')
+api.add_resource(CommandListResource, '/commands')
+api.add_resource(CommandResource, '/commands/<id>')
