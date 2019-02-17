@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  commandlinerunner:
+    build: .
+    image: commandlinerunner:latest
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 5000:5000
