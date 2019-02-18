@@ -5,7 +5,7 @@ from app import db
 class CommandListResource(Resource):
     def get(self):
         commands = Command.query.all()
-        if (not commands):
+        if not commands:
             return abort(404, message="No commands in database")
 
         return commands_schema.dump(commands)
@@ -39,7 +39,7 @@ class CommandResource(Resource):
         command = Command.query.filter_by(id=id).first()
 
         if not command:
-            return abort(404)
+            return abort(404, "Command not found")
 
         return command_schema.dump(command)
     
