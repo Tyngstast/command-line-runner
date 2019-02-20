@@ -1,3 +1,4 @@
+import subprocess, shlex
 from flask_restful import Resource, reqparse, abort
 from app.models import *
 from app import db
@@ -21,7 +22,8 @@ class CommandListResource(Resource):
             return abort(409)
 
         command = Command(args['value'], args['description'])
-        for tag in args['tags']:
+
+        for tag in args['tags'] or []:
             t = Tag.query.filter_by(value=tag).first()
             if t:
                 command.tags.append(t)
@@ -55,10 +57,17 @@ class CommandResource(Resource):
         return '', 204
 
 
-"""
-result = subprocess.run(["ls", "-l"], stdout=subprocess.PIPE)
-if (result.returncode != 0):
-    return abort(500)
+class CommandExecuteResource(Resource):
+    def post(self, id):
+        command = Command.query.filter_by(id=id).first()
 
-return result.stdout.decode("UTF-8")
-"""
+        if not command:
+            return abort(404, 'Command not found')
+
+        args = shlex.split(command.value)
+        result = subprocess.run(args, stdout=subprocess.PIPE)
+
+        if (result.returncode != 0):
+            return abort(500, message='Error executing command. Code: {}'.format(result.returncode))
+
+        return { 'result': result.stdout.decode('UTF-8') }, 200
