@@ -1,3 +1,4 @@
+import os
 import subprocess, shlex
 from flask_restful import Resource, reqparse, abort
 from app.models import *
@@ -65,9 +66,21 @@ class CommandExecuteResource(Resource):
             return abort(404, 'Command not found')
 
         args = shlex.split(command.value)
-        result = subprocess.run(args, stdout=subprocess.PIPE)
+
+        result = -1 
+        try: 
+            result = subprocess.run(args, stdout=subprocess.PIPE)
+        except FileNotFoundError:
+            shell = os.environ['SHELL']
+            shell = shell[shell.rfind('/')+1:]
+            result = subprocess.run(['/bin/{}'.format(shell), '-c', '. {home}/.{shell}rc; {command}'.format(
+                home=os.environ['HOME'], 
+                shell=shell,
+                command=args[0])], stdout=subprocess.PIPE)
+        except Exception as e:
+            return abort(500, message='Error executing command: {}'.format(e))
 
         if (result.returncode != 0):
             return abort(500, message='Error executing command. Code: {}'.format(result.returncode))
 
-        return { 'result': result.stdout.decode('UTF-8') }, 200
+        return {'result': result.stdout.decode('UTF-8')}, 200

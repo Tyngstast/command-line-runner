@@ -17,7 +17,7 @@ class Command(db.Model):
 
     def __init__(self, value, description):
         self.value = value
-        self.description = description 
+        self.description = description
 
     def __repr__(self):
         return 'Command(%r, %r, %r)' % (self.value, self.description, self.tags)
