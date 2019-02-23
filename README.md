@@ -1,10 +1,12 @@
 # Python Command Line Runner Service
 
-RESTful Flask app for CRUD operations and execution of linux commands.
+**Disclaimer: Use with caution and only use on closed access personal network. You could basically destroy you computer with two REST calls...**
 
-The service exposes an API for commands and tags. 
+RESTful Flask app for CRUD operations and execution of linux commands using subprocess lib.
 
-Android app frontend: <https://github.com/TO_BE_DETERMINED>
+The service exposes an API for commands and tags. Relevant POST and DELETE endpoints protected by API\_KEY decorator. API\_KEY will be set to env variable CLR\_API\_KEY or 'secret' if none is set.
+
+Android app frontend: <https://github.com/Tyngstast/TO_BE_DETERMINED>
 
 ## Run
 ### Local Command Line

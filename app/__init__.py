@@ -18,7 +18,7 @@ from flask_restful import Api
 from app.rest.commands import CommandResource, CommandExecuteResource, CommandListResource
 from app.rest.tags import TagResource, TagListResource
 
-api = Api(app)
+api = Api(app, prefix='/clr')
 api.add_resource(CommandListResource, '/commands')
 api.add_resource(CommandResource, '/commands/<id>')
 api.add_resource(CommandExecuteResource, '/commands/execute/<id>')

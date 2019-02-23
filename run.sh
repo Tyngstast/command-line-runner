@@ -3,6 +3,10 @@
 DIR=$(dirname "$0")
 PYTHON_VERSION=3.5.3
 
+if [ -z "$CLR_API_KEY" ]; then
+    export CLR_API_KEY=secret
+fi
+
 if [[ -z "$VIRTUAL_ENV" && ! "$RUNNING_IN_DOCKER" ]]; then
     VENV=$DIR/venv
     if [ ! -d "$VENV" ]; then

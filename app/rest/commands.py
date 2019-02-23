@@ -3,6 +3,7 @@ import subprocess, shlex
 from flask_restful import Resource, reqparse, abort
 from app.models import *
 from app import db
+from app.rest.decorators import require_api_key
 
 class CommandListResource(Resource):
     def get(self):
@@ -12,6 +13,7 @@ class CommandListResource(Resource):
 
         return commands_schema.dump(commands)
     
+    @require_api_key
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('value', required=True, location='json')
@@ -46,6 +48,7 @@ class CommandResource(Resource):
 
         return command_schema.dump(command)
     
+    @require_api_key
     def delete(self, id):
         command = Command.query.filter_by(id=id).first()
 
@@ -59,6 +62,7 @@ class CommandResource(Resource):
 
 
 class CommandExecuteResource(Resource):
+    @require_api_key
     def post(self, id):
         parser = reqparse.RequestParser()
         parser.add_argument('args', action='append', location='args')
