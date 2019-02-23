@@ -42,7 +42,7 @@ class CommandResource(Resource):
         command = Command.query.filter_by(id=id).first()
 
         if not command:
-            return abort(404, "Command not found")
+            return abort(404, message="Command not found")
 
         return command_schema.dump(command)
     
