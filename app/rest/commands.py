@@ -60,23 +60,30 @@ class CommandResource(Resource):
 
 class CommandExecuteResource(Resource):
     def post(self, id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('args', action='append', location='args')
+        query_params = parser.parse_args()
+        print('params', query_params['args'])
+
         command = Command.query.filter_by(id=id).first()
 
         if not command:
             return abort(404, message='Command not found')
 
-        args = shlex.split(command.value)
+        popen_args = shlex.split(command.value)
 
         result = -1 
         try: 
-            result = subprocess.run(args, stdout=subprocess.PIPE)
+            result = subprocess.run(popen_args, stdout=subprocess.PIPE)
         except FileNotFoundError:
             shell = os.environ['SHELL']
             shell = shell[shell.rfind('/')+1:]
-            result = subprocess.run(['/bin/{}'.format(shell), '-c', '. {home}/.{shell}rc; {command}'.format(
+            result = subprocess.run(['/bin/{}'.format(shell), '-c', '. {home}/.{shell}rc; {command} {params}'.format(
                 home=os.environ['HOME'], 
                 shell=shell,
-                command=args[0])], stdout=subprocess.PIPE)
+                command=list_to_separated_string(popen_args),
+                params=list_to_separated_string(query_params['args']))], 
+                stdout=subprocess.PIPE)
         except Exception as e:
             return abort(500, message='Error executing command: {}'.format(str(e)))
 
@@ -85,3 +92,9 @@ class CommandExecuteResource(Resource):
             return abort(500, message='Error executing command. Code: {}'.format(result.returncode))
 
         return {'result': result.stdout.decode('UTF-8')}, 200
+
+def list_to_separated_string(list, sep: str = ' '):
+    if not list:
+        return ''
+
+    return sep.join(map(str, list))
