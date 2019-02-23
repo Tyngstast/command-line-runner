@@ -3,14 +3,14 @@
 DIR=$(dirname "$0")
 PYTHON_VERSION=3.5.3
 
-if [ -z "$VIRTUAL_ENV" ]; then
+if [[ -z "$VIRTUAL_ENV" && ! "$RUNNING_IN_DOCKER" ]]; then
     VENV=$DIR/venv
     if [ ! -d "$VENV" ]; then
         VENV=$HOME/.pyenv/versions/$PYTHON_VERSION/envs/commandlinerunner
     fi
     if [ ! -d "$VENV" ]; then
         echo "virtual environment not found, exiting..." 
-        return
+        exit 0
     fi
     echo "VIRTUAL_ENV not activated, activating..."
     source $VENV/bin/activate 

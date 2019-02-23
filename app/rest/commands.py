@@ -78,9 +78,10 @@ class CommandExecuteResource(Resource):
                 shell=shell,
                 command=args[0])], stdout=subprocess.PIPE)
         except Exception as e:
-            return abort(500, message='Error executing command: {}'.format(e))
+            return abort(500, message='Error executing command: {}'.format(str(e)))
 
         if (result.returncode != 0):
+            print('error while executing', result)
             return abort(500, message='Error executing command. Code: {}'.format(result.returncode))
 
         return {'result': result.stdout.decode('UTF-8')}, 200

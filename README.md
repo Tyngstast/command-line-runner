@@ -1,15 +1,13 @@
 # Python Command Line Runner Service
 
-RESTful Flask app for linux commands.
+RESTful Flask app for CRUD operations and execution of linux commands.
 
-The service will expose a CRUD API for commands. Sqlite database for storage.
-
-Live reloading during development works fine with both command line and docker execution.
+The service exposes an API for commands and tags. 
 
 Android app frontend: <https://github.com/TO_BE_DETERMINED>
 
 ## Run
-### Command Line
+### Local Command Line
 1. Download and install pyenv: https://github.com/pyenv/pyenv#basic-github-checkout
 2. Download and install pyenv-virtualenv: https://github.com/pyenv/pyenv-virtualenv#installation
 3. pyenv install 3.5.3 (reason for 3.5.3 is raspberry pi compatability)
@@ -26,5 +24,7 @@ docker-compose up -d
 * Flask
 * Flask-RESTful
 * SQLAlchemy
+* marshmallow
 * subprocess
+* Docker
 

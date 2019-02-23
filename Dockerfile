@@ -2,6 +2,8 @@ FROM python:3.5-jessie
 
 RUN pip install --upgrade pip
 
+ENV RUNNING_IN_DOCKER=true
+
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
